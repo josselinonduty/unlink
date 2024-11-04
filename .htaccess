@@ -1,0 +1,63 @@
+RewriteEngine On
+
+# If URL is {my-other-domain.net}, redirect to the root domain
+RewriteCond %{HTTP_HOST} ^my-other-domain.net$ [NC]
+RewriteRule ^(.*)$ https://{my-real-domain.com}/$1 [R=301,L]
+
+# If URL is unlinku.cluster029.hosting.ovh.net, redirect to the root domain
+RewriteCond %{HTTP_HOST} ^unlinku.cluster029.hosting.ovh.net$ [NC]
+RewriteRule ^(.*)$ https://unlink.fr/$1 [R=301,L]
+
+# Disable directory browsing
+Options -Indexes
+
+# Redirect /index to /
+RewriteRule ^index/?$ / [R=301,L]
+
+# Special case for /v/{id}: redirect to /v?s={id}
+RewriteRule ^v/([^/]+)$ /v?s=$1 [R=301,L]
+
+# External redirects for visible URLs should come before internal rewrites
+# Redirect direct .php requests to clean URLs - Fixed double slash issue
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+([^.]+)\.php [NC]
+RewriteRule ^ /%1 [R=301,L]
+
+# Redirect /src URLs to clean URLs when directly accessed
+RewriteCond %{THE_REQUEST} \s/+src/([^\s?]*) [NC]
+RewriteRule ^ /%1 [R=301,L]
+
+# Never rewrite lost.php itself
+RewriteRule ^lost\.php$ - [L]
+
+# If the requested resource is a file or directory under /public, serve it directly
+RewriteCond %{REQUEST_URI} ^/public/
+RewriteRule ^ - [L]
+
+# Special case for the root URL: if /src/index.php exists, serve it
+RewriteCond %{REQUEST_URI} ^/$
+RewriteCond %{DOCUMENT_ROOT}/src/index.php -f
+RewriteRule ^$ /src/index.php [L]
+
+# If the requested resource is a file or directory (but not in /src), serve it directly
+RewriteCond %{REQUEST_URI} !^/src/
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# For any other URL, try to serve the corresponding PHP file from /src
+RewriteCond %{REQUEST_URI} !^/src/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/src/$1.php -f
+RewriteRule ^(.+)$ /src/$1.php [L]
+
+# If nothing matches and it's not already lost.php, go to lost.php
+RewriteCond %{REQUEST_URI} !^/lost\.php$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ /src/lost.php [L]
+
+# Error Documents should be absolute URLs to avoid loops
+ErrorDocument 403 /src/lost.php
+ErrorDocument 404 /src/lost.php
+ErrorDocument 500 /src/lost.php
