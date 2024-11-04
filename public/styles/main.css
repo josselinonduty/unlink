@@ -1,0 +1,134 @@
+@import url("https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css");
+@import url("https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&display=swap");
+
+:root {
+  --space-h: 242;
+  --space-s: 24%;
+  --space-l: 24%;
+  --space: hsla(var(--space-h), var(--space-s), var(--space-l), 1);
+
+  --indigo-h: 237;
+  --indigo-s: 63%;
+  --indigo-l: 78%;
+  --indigo: hsla(var(--indigo-h), var(--indigo-s), var(--indigo-l), 1);
+
+  --russian-h: 248;
+  --russian-s: 58%;
+  --russian-l: 12%;
+  --russian: hsva(var(--russian-h), var(--russian-s), var(--russian-l), 1);
+
+  --raspberry-h: 338;
+  --raspberry-s: 45%;
+  --raspberry-l: 49%;
+  --raspberry: hsla(
+    var(--raspberry-h),
+    var(--raspberry-s),
+    var(--raspberry-l),
+    1
+  );
+
+  --sunglow-h: 44;
+  --sunglow-s: 100%;
+  --sunglow-l: 61%;
+  --sunglow: hsla(var(--sunglow-h), var(--sunglow-s), var(--sunglow-l), 1);
+
+  --bulma-family-primary: "Funnel Display", sans-serif;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bulma-primary-h: var(--space-h);
+    --bulma-primary-s: var(--space-s);
+    --bulma-primary-l: var(--space-l);
+
+    --bulma-primary-invert-h: var(--indigo-h);
+    --bulma-primary-invert-s: var(--indigo-s);
+    --bulma-primary-invert-l: var(--indigo-l);
+
+    --bulma-link: var(--raspberry);
+    --bulma-link-text: var(--bulma-link);
+
+    --bulma-light-h: var(--indigo-h);
+    --bulma-light-s: 100%;
+    --bulma-light-l: 100%;
+    --bulma-light: hsla(
+      var(--bulma-light-h),
+      var(--bulma-light-s),
+      var(--bulma-light-l),
+      1
+    );
+  }
+}
+
+/* @media (prefers-color-scheme: dark) {
+    :root {
+    }
+  } */
+
+[data-theme="light"],
+.theme-light {
+  --bulma-primary-h: var(--space-h);
+  --bulma-primary-s: var(--space-s);
+  --bulma-primary-l: var(--space-l);
+
+  --bulma-primary-invert-h: var(--indigo-h);
+  --bulma-primary-invert-s: var(--indigo-s);
+  --bulma-primary-invert-l: var(--indigo-l);
+
+  --bulma-link: var(--raspberry);
+  --bulma-link-text: var(--bulma-link);
+
+  --bulma-light-h: var(--indigo-h);
+  --bulma-light-s: 100%;
+  --bulma-light-l: 100%;
+  --bulma-light: hsla(
+    var(--bulma-light-h),
+    var(--bulma-light-s),
+    var(--bulma-light-l),
+    1
+  );
+}
+
+/* [data-theme=dark],
+  .theme-dark {
+  } */
+
+/* Overrides */
+
+html,
+body {
+  overflow: auto;
+}
+
+* {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.2, 0, 0.3, 1);
+  transition-duration: 150ms;
+}
+
+.navbar .buttons {
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+.is-hero-title span {
+  font-size: 1.5rem;
+  padding: 0 5rem;
+}
+
+.is-transparent {
+  background-color: transparent !important;
+}
+
+.button,
+.input,
+.box,
+.notification,
+* {
+  border-radius: 0;
+}
+
+.table.is-vcentered td,
+.table.is-vcentered th {
+  vertical-align: middle;
+}
