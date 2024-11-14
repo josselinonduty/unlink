@@ -8,10 +8,12 @@
     <link rel="stylesheet" href="/public/styles/main.css">
     <script src="/public/scripts/bulma.js" defer></script>
 
-    <?php require_once 'components/favicon.php'; ?>
+    <?php require_once '../src/components/favicon.php'; ?>
 </head>
 
 <body>
+    <?php require_once '../src/components/navbar.php'; ?>
+
     <?php
 
     $db = new PDO('sqlite:../data/unlink.db');
@@ -21,7 +23,8 @@
     $users = $stmt->fetchAll();
 
     echo "<table border='1'>";
-    echo "<><th>Email</th><th>Token</th><th>Password Hash</th><th>Created At</th><th>Reset Token</th><th>Reset Token Expiry</th></tr>";
+    echo "<thead><th>Email</th><th>Token</th><th>Password Hash</th><th>Created At</th><th>Reset Token</th><th>Reset Token Expiry</th></tr></thead>";
+    echo "<tbody>";
     foreach ($users as $user) {
         echo "<tr>";
         echo "<td>" . $user['email'] . "</td>";
@@ -32,7 +35,7 @@
         echo "<td>" . $user['reset_token_expires'] . "</td>";
         echo "</tr>";
     }
-    echo "</table> <br/>";
+    echo "</tbody></table><br/>";
 
     $stmt = $db->prepare("SELECT * FROM links");
     $stmt->execute();
