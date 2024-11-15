@@ -2,7 +2,7 @@
 
 # unlink
 
-> <u>links</u>. <em>short</em>. <i>fast</i>.
+> <u>links</u>. <strong>short</strong>. <em>fast</em>.
 
 ## License
 
