@@ -17,6 +17,10 @@ RewriteRule ^index/?$ / [R=301,L]
 # Special case for /v/{id}: redirect to /v?s={id}
 RewriteRule ^v/([^/]+)$ /v?s=$1 [R=301,L]
 
+# Render /lost for subdirectories
+RewriteRule ^components(/(.+)?)?$ /src/lost.php [L]
+RewriteRule ^util(/(.+)?)?$ /src/lost.php [L]
+
 # External redirects for visible URLs should come before internal rewrites
 # Redirect direct .php requests to clean URLs - Fixed double slash issue
 RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+([^.]+)\.php [NC]
