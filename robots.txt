@@ -7,3 +7,5 @@ Disallow:  /disappear
 Disallow:  /forgot
 Disallow:  /reset
 Disallow:  /delete
+
+Sitemap: https://unlink.fr/sitemap.xml
