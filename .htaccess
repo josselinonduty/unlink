@@ -1,5 +1,9 @@
 RewriteEngine On
 
+# Upgrade to HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
 # If URL is {my-other-domain.net}, redirect to the root domain
 RewriteCond %{HTTP_HOST} ^my-other-domain.net$ [NC]
 RewriteRule ^(.*)$ https://{my-real-domain.com}/$1 [R=301,L]
