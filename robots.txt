@@ -1,0 +1,9 @@
+User-agent: *
+Disallow:  /v
+Disallow:  /lost
+Disallow:  /verify
+Disallow:  /logout
+Disallow:  /disappear
+Disallow:  /forgot
+Disallow:  /reset
+Disallow:  /delete
