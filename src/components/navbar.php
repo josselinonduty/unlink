@@ -18,6 +18,17 @@ $isConnected = isset($_SESSION['email']);
     </div>
 
     <div class="navbar-menu" id="navbarContent">
+        <div class="navbar-start">
+            <a class="navbar-item" href="https://unlink.fr/v/y625q3" target="_blank">
+                <span class="icon-text">
+                    <span class="icon has-text-primary">
+                        <i class="fab fa-github"></i>
+                    </span>
+                    <span>Github</span>
+                </span>
+            </a>
+        </div>
+
         <div class="navbar-end">
             <div class="buttons is-grouped navbar-item">
                 <?php if ($isConnected): ?>

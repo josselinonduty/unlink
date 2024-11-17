@@ -10,3 +10,5 @@
 
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
 
+    <link rel="preconnect" href="https://kit.fontawesome.com">
+    <script src="https://kit.fontawesome.com/29fe5041a5.js" crossorigin="anonymous" defer></script>
