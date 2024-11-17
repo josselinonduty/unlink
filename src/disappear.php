@@ -12,6 +12,17 @@ try {
     $db = new PDO('sqlite:../data/unlink.db');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    $roleQuery = $db->prepare('SELECT role FROM users WHERE email = :email');
+    $roleQuery->execute(['email' => $email]);
+    $role = $roleQuery->fetchColumn();
+
+    if ($role === 'admin') {
+        $error = 'Admin accounts cannot be deleted.';
+        $message = $error;
+        $redirectUrl = '/profile';
+        goto end;
+    }
+
     $deleteLinks = $db->prepare('DELETE FROM links WHERE owner_email = :email');
     $deleteLinks->execute(['email' => $email]);
 
@@ -31,6 +42,8 @@ try {
     $message = "An error occurred while processing your request. Redirecting to your profile...";
     $redirectUrl = '/profile';
 }
+
+end:
 ?>
 
 <!DOCTYPE html>
