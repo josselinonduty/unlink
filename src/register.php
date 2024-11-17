@@ -27,11 +27,16 @@ try {
 
         $db = new PDO('sqlite:../data/unlink.db');
 
-        $stmt = $db->prepare("INSERT INTO users (email, token, password_hash) VALUES (:email, :token, :password_hash)");
+        $stmt = $db->query("SELECT COUNT(*) FROM users");
+        $userCount = $stmt->fetchColumn();
+        $role = ($userCount == 0) ? 'admin' : 'user';
+
+        $stmt = $db->prepare("INSERT INTO users (email, token, password_hash, role) VALUES (:email, :token, :password_hash, :role)");
         $stmt->execute([
             ':email' => $email,
             ':token' => $token,
             ':password_hash' => $passwordHash,
+            ':role' => $role
         ]);
 
         $verifyLink = "https://unlink.fr/verify?token=$token";
