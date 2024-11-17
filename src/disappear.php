@@ -56,6 +56,8 @@ end:
     <link rel="stylesheet" href="/public/styles/main.css">
     <script src="/public/scripts/bulma.js" defer></script>
 
+    <meta name="robots" content="noindex, nofollow">
+
     <meta name="description" content="Unlink. Fast, free, open-source url shortener." />
     <meta property="og:description" content="Unlink. Fast, free, open-source url shortener." />
     <meta property="og:title" content="disappear - unlink." />

@@ -4,4 +4,5 @@ session_unset();
 session_destroy();
 
 header("Location: /");
+header("X-Robots-Tag: noindex, nofollow");
 exit;
