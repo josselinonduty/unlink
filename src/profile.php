@@ -11,7 +11,7 @@ try {
 
     $email = $_SESSION['email'];
 
-    $userQuery = $db->prepare('SELECT email, created_at FROM users WHERE email = :email');
+    $userQuery = $db->prepare('SELECT email, created_at, role FROM users WHERE email = :email');
     $userQuery->execute(['email' => $email]);
     $user = $userQuery->fetch(PDO::FETCH_ASSOC);
 
@@ -63,6 +63,11 @@ try {
                         <p><strong>Member since:</strong> <?= htmlspecialchars((new DateTime($user['created_at']))->format('F j, Y')) ?></p>
                     </div>
 
+                    <div class="level">
+                        <p><strong>Role:</strong> <?= $user['role'] ?></p>
+                        <p><strong>Links left:</strong> <?= $user['role'] === 'admin' ? 'unlimited' : 10 - count($links) ?></p>
+                    </div>
+
                     <div class="level level-left">
                         <a class="button is-danger" href="/disappear">Delete my account</a>
                         <a class="button is-primary is-outlined" href="/forgot">Change my password</a>
@@ -73,7 +78,13 @@ try {
 
 
                 <?php if (count($links) > 0): ?>
-                    <a class="button is-primary" href="/create">Create a new link</a>
+                    <?php if ($user['role'] !== 'admin' && count($links) >= 10): ?>
+                        <div class="notification is-warning">
+                            You have reached the maximum number of links allowed.
+                        </div>
+                    <?php else: ?>
+                        <a class="button is-primary" href="/create">Create a new link</a>
+                    <?php endif; ?>
 
                     <div class="table-container">
                         <table class="table is-striped is-fullwidth is-vcentered">
