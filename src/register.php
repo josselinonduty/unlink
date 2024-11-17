@@ -25,7 +25,8 @@ try {
         $token = bin2hex(random_bytes(16));
         $passwordHash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 14]);
 
-        $db = new PDO('sqlite:../unlink.db');
+        $db = new PDO('sqlite:../data/unlink.db');
+
         $stmt = $db->prepare("INSERT INTO users (email, token, password_hash) VALUES (:email, :token, :password_hash)");
         $stmt->execute([
             ':email' => $email,
