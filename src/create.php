@@ -21,6 +21,14 @@ try {
             $db = new PDO('sqlite:../data/unlink.db');
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+            $roleQuery = $db->prepare('SELECT role FROM users WHERE email = :email');
+            $roleQuery->execute(['email' => $email]);
+            $role = $roleQuery->fetchColumn();
+
+            if ($role === 'admin') {
+                goto createLink;
+            }
+
             $linkCountQuery = $db->prepare('SELECT COUNT(*) FROM links WHERE owner_email = :email');
             $linkCountQuery->execute(['email' => $email]);
             $linkCount = $linkCountQuery->fetchColumn();
@@ -28,6 +36,7 @@ try {
             if ($linkCount >= 10) {
                 $error = 'You have reached the maximum of 10 links.';
             } else {
+                createLink:
                 $isUnique = false;
                 do {
                     $shortid = generateShortId(6);
