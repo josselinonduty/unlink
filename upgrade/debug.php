@@ -23,7 +23,7 @@
     $users = $stmt->fetchAll();
 
     echo "<table border='1'>";
-    echo "<thead><th>Email</th><th>Token</th><th>Password Hash</th><th>Created At</th><th>Reset Token</th><th>Reset Token Expiry</th></tr></thead>";
+    echo "<thead><th>Email</th><th>Token</th><th>Password Hash</th><th>Created At</th><th>Reset Token</th><th>Reset Token Expiry</th><th>Role</th></tr></thead>";
     echo "<tbody>";
     foreach ($users as $user) {
         echo "<tr>";
@@ -33,6 +33,7 @@
         echo "<td>" . $user['created_at'] . "</td>";
         echo "<td>" . $user['reset_token'] . "</td>";
         echo "<td>" . $user['reset_token_expires'] . "</td>";
+        echo "<td>" . $user['role'] . "</td>";
         echo "</tr>";
     }
     echo "</tbody></table><br/>";
