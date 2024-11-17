@@ -8,6 +8,15 @@
     <link rel="stylesheet" href="/public/styles/main.css">
     <script src="/public/scripts/bulma.js" defer></script>
 
+
+    <meta name="description" content="Unlink. Fast, free, open-source url shortener." />
+    <meta property="og:description" content="Unlink. Fast, free, open-source url shortener." />
+    <meta property="og:title" content="unlink." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://unlink.fr/" />
+    <meta property="og:image" content="https://unlink.fr/public/icon/og-512.png" />
+    <meta name="theme-color" content="#00056b">
+
     <?php require_once 'components/favicon.php'; ?>
 
     <style>

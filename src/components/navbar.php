@@ -9,7 +9,7 @@ $isConnected = isset($_SESSION['email']);
             <strong>unlink.</strong>
         </a>
 
-        <a role="navbar-button" class="navbar-burger" data-target="navbarContent" aria-label="menu" aria-expanded="false">
+        <a class="navbar-burger" data-target="navbarContent" aria-label="menu" aria-expanded="false">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
