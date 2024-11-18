@@ -49,9 +49,7 @@ try {
         $verifyLink = "https://unlink.fr/verify?token=$token";
         $subject = "Verify Your Email";
         $message = "Please click the following link to verify your email: $verifyLink";
-        $headers = [
-            'From' => 'no-reply@unlink.fr <unlinku@cluster029.hosting.ovh.net>',
-        ];
+        $headers = [];
 
         if (!mail($email, $subject, $message, $headers)) {
             throw new Exception("Failed to send verification email.");

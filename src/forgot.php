@@ -38,9 +38,7 @@ try {
             $resetLink = "https://unlink.fr/reset?token=$resetToken";
             $subject = "Reset your password";
             $message = "Please click the following link to reset your password: $resetLink\nThis link will expire in 15 minutes.";
-            $headers = [
-                'From' => 'no-reply@unlink.fr <unlinku@cluster029.hosting.ovh.net>',
-            ];
+            $headers = [];
 
             mail($email, $subject, $message, $headers);
         }
