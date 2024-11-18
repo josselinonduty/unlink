@@ -33,6 +33,8 @@
   --sunglow: hsla(var(--sunglow-h), var(--sunglow-s), var(--sunglow-l), 1);
 
   --bulma-family-primary: "Funnel Display", sans-serif;
+  --bulma-radius: 0;
+  --bulma-burger-border-radius: 0;
 }
 
 @media (prefers-color-scheme: light) {
@@ -118,14 +120,6 @@ body {
 
 .is-transparent {
   background-color: transparent !important;
-}
-
-.button,
-.input,
-.box,
-.notification,
-* {
-  border-radius: 0;
 }
 
 .table.is-vcentered td,

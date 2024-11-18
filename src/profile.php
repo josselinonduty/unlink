@@ -2,6 +2,7 @@
 session_start();
 
 $asUser = null;
+$users = null;
 try {
     if (!isset($_SESSION['email'])) {
         header('Location: /login');
@@ -16,14 +17,25 @@ try {
     $userQuery = $db->prepare('SELECT email, created_at, role FROM users WHERE email = :email');
     $userQuery->execute(['email' => $email]);
     $user = $userQuery->fetch(PDO::FETCH_ASSOC);
+    $asUser = $user;
 
     if ($user['role'] === 'admin' && isset($_GET['as']) && !empty($_GET['as'])) {
         $email = $_GET['as'];
         $userQuery->execute(['email' => $email]);
         $asUser = $userQuery->fetch(PDO::FETCH_ASSOC);
+
+        if (!$asUser) {
+            $error = "The user you are trying to view does not exist.";
+        }
     }
 
-    if (isset($asUser)) {
+    if ($user['role'] === 'admin') {
+        $usersQuery = $db->prepare('SELECT email FROM users WHERE email != :email');
+        $usersQuery->execute(['email' => $email]);
+        $users = $usersQuery->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    if ($asUser['email'] !== $user['email'] && $asUser['role'] !== 'admin') {
         $linksQuery = $db->prepare('SELECT shortid, source_url, created_at, deleting_at, views FROM links WHERE owner_email = :email');
         $linksQuery->execute(['email' => $email]);
         $links = $linksQuery->fetchAll(PDO::FETCH_ASSOC);
@@ -81,13 +93,13 @@ try {
             <?php else: ?>
                 <div class="box">
                     <div class="level">
-                        <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
-                        <p><strong>Member since:</strong> <?= htmlspecialchars((new DateTime($user['created_at']))->format('F j, Y')) ?></p>
+                        <p><strong>Email:</strong> <?= htmlspecialchars($asUser['email']) ?></p>
+                        <p><strong>Member since:</strong> <?= htmlspecialchars((new DateTime($asUser['created_at']))->format('F j, Y')) ?></p>
                     </div>
 
                     <div class="level">
-                        <p><strong>Role:</strong> <?= $user['role'] ?></p>
-                        <p><strong>Links left:</strong> <?= $user['role'] === 'admin' ? 'unlimited' : 10 - count($links) ?></p>
+                        <p><strong>Role:</strong> <?= $asUser['role'] ?></p>
+                        <p><strong>Links left:</strong> <?= $asUser['role'] === 'admin' ? 'unlimited' : 10 - count($links) ?></p>
                     </div>
 
                     <div class="level level-left">
@@ -96,16 +108,22 @@ try {
                     </div>
 
                     <?php if ($user['role'] === 'admin'): ?>
-                        <?php if (isset($asUser)): ?>
+                        <?php if ($user['email'] !== $asUser['email']): ?>
                             <div class="level">
                                 <a class="button is-primary" href="/profile">View as myself</a>
                             </div>
                         <?php else: ?>
                             <div class="level">
                                 <form action="/profile" method="get" class="field has-addons">
-                                    <div class="control is-expanded">
-                                        <input class="input" type="email" name="as" placeholder="alice@bob.net" required autocomplete="off">
+                                    <div class="select">
+                                        <select name="as" required autocomplete="off">
+                                            <option value="" disabled selected>Select a user</option>
+                                            <?php foreach ($users as $u): ?>
+                                                <option value="<?= htmlspecialchars($u) ?>"><?= htmlspecialchars($u) ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </div>
+
                                     <div class="control">
                                         <button type="submit" class="button is-primary">View as user</button>
                                     </div>
@@ -118,7 +136,7 @@ try {
                 <h2 class="subtitle">Your Links</h2>
 
                 <?php if (count($links) > 0): ?>
-                    <?php if ($user['role'] !== 'admin' && count($links) >= 10): ?>
+                    <?php if ($asUser['role'] !== 'admin' && count($links) >= 10): ?>
                         <div class="notification is-warning">
                             You have reached the maximum number of links allowed.
                         </div>
