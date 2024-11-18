@@ -104,7 +104,7 @@ try {
                             <div class="level">
                                 <form action="/profile" method="get" class="field has-addons">
                                     <div class="control is-expanded">
-                                        <input class="input" type="email" name="as" placeholder="alice@bob.net" required>
+                                        <input class="input" type="email" name="as" placeholder="alice@bob.net" required autocomplete="off">
                                     </div>
                                     <div class="control">
                                         <button type="submit" class="button is-primary">View as user</button>
