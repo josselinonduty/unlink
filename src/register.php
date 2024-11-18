@@ -17,6 +17,15 @@ try {
             throw new Exception('Invalid email address.');
         }
 
+        $db = new PDO('sqlite:../data/unlink.db');
+        $stmt = $db->prepare("SELECT COUNT(*) FROM users WHERE email = :email");
+        $stmt->execute([':email' => $email]);
+        $userCount = $stmt->fetchColumn();
+
+        if ($userCount > 0) {
+            throw new Exception('Email address is already in use.');
+        }
+
         $password_errors = isPasswordValid($password);
         if ($password_errors) {
             throw new Exception('Password does not meet the following requirements:');
@@ -24,8 +33,6 @@ try {
 
         $token = bin2hex(random_bytes(16));
         $passwordHash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 14]);
-
-        $db = new PDO('sqlite:../data/unlink.db');
 
         $stmt = $db->query("SELECT COUNT(*) FROM users");
         $userCount = $stmt->fetchColumn();
