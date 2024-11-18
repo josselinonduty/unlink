@@ -1,5 +1,7 @@
 <?php
 session_start();
+
+$asUser = null;
 try {
     if (!isset($_SESSION['email'])) {
         header('Location: /login');
@@ -15,9 +17,21 @@ try {
     $userQuery->execute(['email' => $email]);
     $user = $userQuery->fetch(PDO::FETCH_ASSOC);
 
-    $linksQuery = $db->prepare('SELECT shortid, source_url, created_at, deleting_at, views FROM links WHERE owner_email = :email');
-    $linksQuery->execute(['email' => $email]);
-    $links = $linksQuery->fetchAll(PDO::FETCH_ASSOC);
+    if ($user['role'] === 'admin' && isset($_GET['as']) && !empty($_GET['as'])) {
+        $email = $_GET['as'];
+        $userQuery->execute(['email' => $email]);
+        $asUser = $userQuery->fetch(PDO::FETCH_ASSOC);
+    }
+
+    if (isset($asUser)) {
+        $linksQuery = $db->prepare('SELECT shortid, source_url, created_at, deleting_at, views FROM links WHERE owner_email = :email');
+        $linksQuery->execute(['email' => $email]);
+        $links = $linksQuery->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        $linksQuery = $db->prepare('SELECT shortid, source_url, created_at, deleting_at, views FROM links WHERE owner_email = :email');
+        $linksQuery->execute(['email' => $email]);
+        $links = $linksQuery->fetchAll(PDO::FETCH_ASSOC);
+    }
 } catch (PDOException $e) {
     $error = "An error occurred while fetching your profile data.";
 }
@@ -80,10 +94,28 @@ try {
                         <a class="button is-danger" href="/disappear">Delete my account</a>
                         <a class="button is-primary is-outlined" href="/forgot">Change my password</a>
                     </div>
+
+                    <?php if ($user['role'] === 'admin'): ?>
+                        <?php if (isset($asUser)): ?>
+                            <div class="level">
+                                <a class="button is-primary" href="/profile">View as myself</a>
+                            </div>
+                        <?php else: ?>
+                            <div class="level">
+                                <form action="/profile" method="get" class="field has-addons">
+                                    <div class="control is-expanded">
+                                        <input class="input" type="email" name="as" placeholder="alice@bob.net" required>
+                                    </div>
+                                    <div class="control">
+                                        <button type="submit" class="button is-primary">View as user</button>
+                                    </div>
+                                </form>
+                            </div>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </div>
 
                 <h2 class="subtitle">Your Links</h2>
-
 
                 <?php if (count($links) > 0): ?>
                     <?php if ($user['role'] !== 'admin' && count($links) >= 10): ?>
