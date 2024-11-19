@@ -14,6 +14,7 @@ try {
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $longUrl = trim($_POST['long_url']);
+        $displayName = trim($_POST['display_name']);
 
         if (empty($longUrl) || !filter_var($longUrl, FILTER_VALIDATE_URL)) {
             $error = 'Please enter a valid URL.';
@@ -47,8 +48,9 @@ try {
                 } while (!$isUnique);
                 // TODO: Implement link creation
 
-                $insertQuery = $db->prepare('INSERT INTO links (shortid, source_url, owner_email, deleting_at) VALUES (:shortid, :source_url, :owner_email, NULL)');
+                $insertQuery = $db->prepare('INSERT INTO links (display_name, shortid, source_url, owner_email, deleting_at) VALUES (:display_name, :shortid, :source_url, :owner_email, NULL)');
                 $insertQuery->execute([
+                    'display_name' => $displayName,
                     'shortid' => $shortid,
                     'source_url' => $longUrl,
                     'owner_email' => $email
@@ -109,6 +111,13 @@ try {
                     <label class="label" for="long_url">URL</label>
                     <div class="control">
                         <input type="url" id="long_url" name="long_url" class="input" placeholder="https://example.com" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="display_name">Name (optional)</label>
+                    <div class="control">
+                        <input type="text" id="display_name" name="display_name" class="input" placeholder="Optional">
                     </div>
                 </div>
 

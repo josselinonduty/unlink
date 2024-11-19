@@ -43,9 +43,10 @@
     $links = $stmt->fetchAll();
 
     echo "<table border='1'>";
-    echo "<tr><th>Short ID</th><th>Source URL</th><th>Owner Email</th><th>Created At</th><th>Deleting At</th><th>Views</th></tr>";
+    echo "<tr><th>Name</th><th>Short ID</th><th>Source URL</th><th>Owner Email</th><th>Created At</th><th>Deleting At</th><th>Views</th></tr>";
     foreach ($links as $link) {
         echo "<tr>";
+        echo "<td>" . $link['display_name'] . "</td>";
         echo "<td>" . $link['shortid'] . "</td>";
         echo "<td>" . $link['source_url'] . "</td>";
         echo "<td>" . $link['owner_email'] . "</td>";

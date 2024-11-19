@@ -36,11 +36,11 @@ try {
     }
 
     if ($asUser['email'] !== $user['email'] && $asUser['role'] !== 'admin') {
-        $linksQuery = $db->prepare('SELECT shortid, source_url, created_at, deleting_at, views FROM links WHERE owner_email = :email');
+        $linksQuery = $db->prepare('SELECT shortid, source_url, created_at, deleting_at, views, display_name FROM links WHERE owner_email = :email');
         $linksQuery->execute(['email' => $email]);
         $links = $linksQuery->fetchAll(PDO::FETCH_ASSOC);
     } else {
-        $linksQuery = $db->prepare('SELECT shortid, source_url, created_at, deleting_at, views FROM links WHERE owner_email = :email');
+        $linksQuery = $db->prepare('SELECT shortid, source_url, created_at, deleting_at, views, display_name FROM links WHERE owner_email = :email');
         $linksQuery->execute(['email' => $email]);
         $links = $linksQuery->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -77,6 +77,15 @@ try {
             });
         }
     </script>
+
+    <style>
+        .link-name {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
 </head>
 
 <body>
@@ -148,6 +157,7 @@ try {
                         <table class="table is-striped is-fullwidth is-vcentered">
                             <thead>
                                 <tr>
+                                    <th class="has-text-centered">Name</th>
                                     <th class="has-text-centered">Created at</th>
                                     <th class="has-text-centered">Expires at</th>
                                     <th class="has-text-centered">Source</th>
@@ -160,20 +170,23 @@ try {
                             <tbody>
                                 <?php foreach ($links as $link): ?>
                                     <tr>
+                                        <td class="has-text-centered link-name"><?= htmlspecialchars($link['display_name']) ?: '-' ?></td>
                                         <td class="has-text-centered"><?= htmlspecialchars((new DateTime($link['created_at']))->format('Y-m-d')) ?></td>
                                         <td class="has-text-centered"><?= $link['deleting_at'] ? htmlspecialchars((new DateTime($link['deleting_at']))->format('Y-m-d')) : '-' ?></td>
                                         <td class="has-text-centered">
                                             <a class="button is-primary is-outlined" href="<?= htmlspecialchars($link['source_url']) ?>" target="_blank">Open</a>
                                         </td>
                                         <td class="has-text-centered">
-                                            <a class="button is-primary is-outlined" href="https://unlink.fr/v/<?= htmlspecialchars($link['shortid']) ?>" target="_blank">Open</a>
-                                            <button class="button is-primary" onclick="copyToClipboard('<?= htmlspecialchars($link['shortid']) ?>')">
-                                                Copy
-                                            </button>
+                                            <div class="level">
+                                                <a class="button is-primary is-outlined" href="https://unlink.fr/v/<?= htmlspecialchars($link['shortid']) ?>" target="_blank">Open</a>
+                                                <button class="button is-primary" onclick="copyToClipboard('<?= htmlspecialchars($link['shortid']) ?>')">
+                                                    Copy
+                                                </button>
+                                            </div>
                                         </td>
                                         <td class="has-text-centered"><?= htmlspecialchars($link['views']) ?></td>
 
-                                        <td class="has-text-centered buttons">
+                                        <td class="has-text-centered">
                                             <a href="/delete?s=<?= htmlspecialchars($link['shortid']) ?>" class="button is-danger">Delete</a>
                                         </td>
                                     </tr>

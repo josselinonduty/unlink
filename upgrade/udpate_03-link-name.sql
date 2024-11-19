@@ -1,0 +1,2 @@
+ALTER TABLE links
+ADD COLUMN display_name TEXT DEFAULT NULL;

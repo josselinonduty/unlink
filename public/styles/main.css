@@ -34,6 +34,9 @@
 
   --bulma-family-primary: "Funnel Display", sans-serif;
   --bulma-radius: 0;
+  --bulma-radius-small: 0;
+  --bulma-radius-large: 0;
+  --bulma-radius-huge: 0;
   --bulma-burger-border-radius: 0;
 }
 
