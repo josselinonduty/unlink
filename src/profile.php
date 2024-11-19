@@ -187,7 +187,10 @@ try {
                                         <td class="has-text-centered"><?= htmlspecialchars($link['views']) ?></td>
 
                                         <td class="has-text-centered">
-                                            <a href="/delete?s=<?= htmlspecialchars($link['shortid']) ?>" class="button is-danger">Delete</a>
+                                            <div class="level">
+                                                <a href="/edit?s=<?= htmlspecialchars($link['shortid']) ?>" class="button is-primary">Edit</a>
+                                                <a href="/delete?s=<?= htmlspecialchars($link['shortid']) ?>" class="button is-danger">Delete</a>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
