@@ -37,7 +37,7 @@ try {
 
     if ($asUser['email'] !== $user['email'] && $asUser['role'] !== 'admin') {
         $linksQuery = $db->prepare('SELECT shortid, source_url, created_at, deleting_at, views, display_name FROM links WHERE owner_email = :email');
-        $linksQuery->execute(['email' => $email]);
+        $linksQuery->execute(['email' => $asUser['email']]);
         $links = $linksQuery->fetchAll(PDO::FETCH_ASSOC);
     } else {
         $linksQuery = $db->prepare('SELECT shortid, source_url, created_at, deleting_at, views, display_name FROM links WHERE owner_email = :email');
@@ -150,7 +150,11 @@ try {
                             You have reached the maximum number of links allowed.
                         </div>
                     <?php else: ?>
-                        <a class="button is-primary" href="/create">Create a new link</a>
+                        <a
+                            class="button is-primary"
+                            href="/create<?= $asUser['email'] !== $user['email'] ? '?as=' . htmlspecialchars($asUser['email']) : '' ?>">
+                            Create a new link
+                        </a>
                     <?php endif; ?>
 
                     <div class="table-container">
@@ -198,7 +202,11 @@ try {
                         </table>
                     </div>
                 <?php else: ?>
-                    <a class="button is-primary" href="/create">Shorten my first link</a>
+                    <a
+                        class="button is-primary"
+                        href="/create<?= $asUser['email'] !== $user['email'] ? '?as=' . htmlspecialchars($asUser['email']) : '' ?>">
+                        Shorten my first link
+                    </a>
                 <?php endif; ?>
             <?php endif; ?>
         </div>

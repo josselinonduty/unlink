@@ -11,9 +11,25 @@ try {
     }
 
     $email = $_SESSION['email'];
+    $asEmail = $email;
+
+    if (isset($_GET['as'])) {
+        $as = $_GET['as'];
+
+        $db = new PDO('sqlite:../data/unlink.db');
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $roleQuery = $db->prepare('SELECT role FROM users WHERE email = :email');
+        $roleQuery->execute(['email' => $email]);
+        $role = $roleQuery->fetchColumn();
+
+        if ($role === 'admin') {
+            $asEmail = $as;
+        }
+    }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $longUrl = trim($_POST['long_url']);
+        $longUrl = trim($_POST['source_url']);
         $displayName = trim($_POST['display_name']);
 
         if (empty($longUrl) || !filter_var($longUrl, FILTER_VALIDATE_URL)) {
@@ -31,7 +47,7 @@ try {
             }
 
             $linkCountQuery = $db->prepare('SELECT COUNT(*) FROM links WHERE owner_email = :email');
-            $linkCountQuery->execute(['email' => $email]);
+            $linkCountQuery->execute(['email' => $asEmail]);
             $linkCount = $linkCountQuery->fetchColumn();
 
             if ($linkCount >= 10) {
@@ -53,12 +69,16 @@ try {
                     'display_name' => $displayName,
                     'shortid' => $shortid,
                     'source_url' => $longUrl,
-                    'owner_email' => $email
+                    'owner_email' => $asEmail
                 ]);
 
                 $success = 'Link created successfully!';
 
-                header('Location: /profile');
+                if ($asEmail === $email) {
+                    header('Location: /profile');
+                } else {
+                    header('Location: /profile?as=' . $asEmail);
+                }
                 exit();
             }
         }
@@ -106,11 +126,11 @@ try {
                 </div>
             <?php endif; ?>
 
-            <form action="/create" method="post">
+            <form action="/create<?= $asEmail !== $email ? '?as=' . urlencode($asEmail) : '' ?>" method="post">
                 <div class="field">
-                    <label class="label" for="long_url">URL</label>
+                    <label class="label" for="source_url">URL</label>
                     <div class="control">
-                        <input type="url" id="long_url" name="long_url" class="input" placeholder="https://example.com" required>
+                        <input type="url" id="source_url" name="source_url" class="input" placeholder="https://example.com" required>
                     </div>
                 </div>
 
